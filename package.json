@@ -9,7 +9,9 @@
     "start": "serve -s dist",
     "build": "node build/build.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "serve": "^10.1.2"
+  },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
