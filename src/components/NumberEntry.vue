@@ -1,5 +1,4 @@
-Vue.component('NumberEntry', {
-  template: `
+<template>
   <div id="number-entry" >
   <Row type="flex" justify="center" align="middle">
   <Col span="4">
@@ -70,12 +69,17 @@ Vue.component('NumberEntry', {
       <Poptip trigger="focus" content=">"><Button type="info" shape="circle" style="width:150px; height:40px" size="large" @click.prevent="onclick('>')" >&gt;</Button></Poptip>
   </Col>
   </Row>
-  </div>`,
-  name: 'NumberEntry',
+  </div>
+  </template>
+
+  <script>
+export default {
+  name: "NumberEntry",
   methods: {
     onclick(key) {
       console.log(key);
       this.$emit("inputNumber", key);
     }
   }
-})
+};
+</script>
