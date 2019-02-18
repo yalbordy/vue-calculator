@@ -2,52 +2,67 @@ Vue.component('App', {
   template: `
   <div id="app"  @keypress.exact="onkeypress">
  
-  <table>
-  <tr>
-    <td class="e">
+  
+  <Divider />
+  <Rate v-model="level" disabled :count="10" allow-half />
+  <Row type="flex" justify="center" align="middle">
+  <Col span="10" style="height:50"> </Col>
+  </Row>
+  <Row type="flex" justify="center" align="middle">
+    <Col span="1">
+    <i style="font-size:small">Time:</i>
+    </Col>
+    <Col span="1">
     <div class="bounce">
-      <i style="font-size:small">Time:</i>
       <transition name="bounce">
-        <span v-if="totalTimeFlag" :class="{wrong:totalTime<10}" key="on">{{totalTime}}</span>
-        <span v-else="" :class="{wrong:totalTime<10}" >{{totalTime}}</span>
+        <span style="font-size:xx-large" v-if="totalTimeFlag" :class="{wrong:totalTime<10}" key="on">{{totalTime}}</span>
+        <span style="font-size:xx-large" v-else="" :class="{wrong:totalTime<10}" >{{totalTime}}</span>
       </transition>
       </div>
-    </td>
-    <td class="e">
+    </Col>
+    <Col span="1">
+    <i style="font-size:small">Level:</i>
+    </Col>
+    <Col span="1">
     <div class="in-out-translate-demo-wrapper">
-      <i style="font-size:small">Level:</i>
       <transition name="in-out-translate-fade" mode="in-out">
-        <span v-if="levelFlag" key="on">{{level+1}}</span>
-        <span v-else="" key="off">{{level+1}}</span>
+        <span style="font-size:xx-large" v-if="levelFlag" key="on">{{level+1}}</span>
+        <span style="font-size:xx-large" v-else="" key="off">{{level+1}}</span>
       </transition>
       </div>
-    </td>
-    <td><span :class="icon"></span></td>
-    <td class="e"><i style="font-size:small">Total Win:</i>{{totalWin}}</td>
-  </tr>
-  <tr>
-    <td class="e" >
+      </Col>
+      <Col span="2"><span style="font-size:xx-large" :class="icon"></span></Col>
+      
+    <Col span="1"><i style="font-size:small">Total Win:</i></Col>
+    <Col span="1"><Badge :count="win"><span style="font-size:xx-large">{{totalWin}}</span></Badge></Col>
+  </Row>
+  <Row type="flex" justify="center" align="middle">
+    <Col span="2" >
     <div class="in-out-translate-demo-wrapper">
       <i style="font-size:small">Life:</i>
       <transition name="in-out-translate-fade" mode="in-out">
         <span v-if="lifeFlag" key="on">{{life}}</span>
         <span v-else="" key="off">{{life}}</span>
         </transition>
-    </td>
-    <td class="e" colspan="2"><i style="font-size:small">Score:</i>{{score}}</td>
-    <td class="e"><i style="font-size:small">Win:</i>{{win}}</td>
-  </tr>
-  </table>
+    </div>
+    </Col>
+    <Col span="4"><i style="font-size:small">Score:</i>{{score}}</Col>
+    <Col span="2"><i style="font-size:small">Win:</i>{{win}}</Col>
+  </Row>
+  
+  <Row type="flex" justify="center" align="middle">
     <div v-if="gameOver">
       <h1 style="color:red">Game Over!</h1>
-      <button @click="newGame">Start</button>
+      <Button type="primary" @click="newGame">Start</Button>
     </div>
     <div  v-else="gameOver">
       <div v-for="expId in expressionsIdx">
       <expression :id='expId' ref='expId' @activate='activate'  />
       </div>
+      <Divider />
       <NumberEntry @inputNumber="onInputNumber"/>
     </div>
+    </Row>
     </div>`,
   provide: function () {
     return {
@@ -71,7 +86,7 @@ Vue.component('App', {
       totalWin: 0,
       shiftKey: false,
       activeIdx: 0,
-      scoreLevel: [10, 100, 1000, 10000, 10000, 10000],
+      scoreLevel: [10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, 10000000000],
       iconSet: [],
       expressionsIdx: [0, 1, 2, 3, 4],
       timer: null,
@@ -102,6 +117,33 @@ Vue.component('App', {
   },
   name: "App",
   methods: {
+    info(title, desc) {
+      this.$Notice.info({
+        title: title,
+        desc: desc,
+        duration: 3
+      });
+    },
+    success(title, desc) {
+      this.$Notice.success({
+        title: title,
+        desc: desc
+      });
+    },
+    warning(title, desc) {
+      this.$Notice.warning({
+        title: title,
+        desc: desc,
+        duration: 5
+      });
+    },
+    error(title, desc) {
+      this.$Notice.error({
+        title: title,
+        desc: desc,
+        duration: 8
+      });
+    },
     newGame() {
       this.gameOver = false;
       this.gameStatusChanged = true;
@@ -114,9 +156,23 @@ Vue.component('App', {
       this.shiftKey = false;
       this.activeIdx = 0;
 
+      this.$Loading.config({
+        color: '#5cb85c',
+        failedColor: '#f0ad4e',
+        height: 25
+      });
+      this.$Loading.start();
+      this.$Loading.update(0);
+      this.$Notice.config({
+        top: 10,
+        duration: 1
+      });
+
+
       this.timer = setInterval(() => {
         this.totalTime -= 1;
         this.checkGame();
+        this.$Loading.update((1 - this.totalTime / TOTAL_TIME) * 100);
         if (this.totalTime < 10 && this.totalTime > 0)
           this.totalTimeFlag = !this.totalTimeFlag;
       }, 1000);
@@ -126,6 +182,12 @@ Vue.component('App', {
       if (this.totalTime <= 0 || this.life <= 0) {
         this.gameOver = true;
         clearInterval(this.timer);
+      }
+      if (this.totalTime % 60 === 0) {
+        this.warning("Last " + (this.totalTime / 60) + " minutes", "");
+      }
+      if (this.totalTime == 10) {
+        this.warning("Last 10 seconds", "");
       }
     },
     activate(idx) {
@@ -144,21 +206,34 @@ Vue.component('App', {
       // console.log("App catch:" + key + " active:" + this.activeIdx);
       this.$refs.expId[this.activeIdx].setInputAnswer(key);
     },
+    getExpression(vmExp) {
+      let exp = ''
+      for (let i in vmExp.exp) {
+        if (vmExp.exp[i] === 'Q') {
+          exp += vmExp.answer;
+        } else {
+          exp += vmExp.exp[i];
+        }
+
+      }
+      return exp;
+    },
     goodAnswer: function (vmExp) {
-      console.log("goodAnswer::");
+      this.success(this.getExpression(vmExp), "");
       this.win += 1;
       this.totalWin += 1;
-      this.score += this.scoreLevel[this.level] / Math.pow(10, this.level) * this.win;
+      // let bonus = Number.parseInt(this.win / 10);
+      this.score += this.scoreLevel[this.level] / 10 * 1;
       if (this.score > this.scoreLevel[this.level]) {
         this.level += 1;
         this.levelFlag = !this.levelFlag;
-        console.log("level up::" + this.level);
+        this.info("level up!", 'New level is ' + (this.level + 1));
       }
       vmExp.setLevel(this.level);
 
     },
     badAnswer: function (vmExp) {
-      console.log("badAnswer::");
+      this.error(this.getExpression(vmExp), "");
       this.win = 0;
       this.life -= 1;
       this.lifeFlag = !this.lifeFlag;

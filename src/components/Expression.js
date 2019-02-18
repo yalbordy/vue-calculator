@@ -40,8 +40,8 @@ Vue.component('Expression', {
   },
   computed: {
     exp() {
-      let ops = level_operators[this.level];
-      let signs = level_equal_sign[this.level];
+      let ops = level_operators[Math.min(9, this.level)];
+      let signs = level_equal_sign[Math.min(9, this.level)];
 
 
       let ret = this.shakeNumber(ops);
@@ -123,7 +123,7 @@ Vue.component('Expression', {
       }
     },
     shakeNumber(ops) {
-      let digit = level_digit[this.level];
+      let digit = level_digit[Math.min(9, this.level)];
       let opCnt = parseInt(Math.random() * 100 % 3);
       if (opCnt === 0) opCnt = 1;
 
