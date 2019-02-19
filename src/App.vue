@@ -73,11 +73,8 @@
         <div v-for="expId in expressionsIdx">
           <expression :id='expId' :ref='expId' @activate="activate" />
         </div>
-
-        <Affix :offset-bottom="20">
         <Divider />
         <NumberEntry @inputNumber="onInputNumber" />
-        </Affix>
       </div>
       
     </Row >
