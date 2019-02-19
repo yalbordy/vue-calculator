@@ -1,45 +1,49 @@
 <template>
-  <div id="app" @keypress.exact="onkeypress">
+  <div id="app" @keypress.exact="onkeypress" @keydown.native="onkeydown" @keyup.native="onkeyup">
     <Divider />
 
     <Row type="flex" justify="center" align="middle">
         <Col span="2">
-            <Row justify="start" align="top"><Col span="24"><i style="font-size:small;height:50px">Time:</i></Col></Row>
+            <Row><Col><i style="font-size:small">Time:</i></Col></Row>
             <Divider />
-            <Row justify="start" align="bottom"><Col span="24"><i style="font-size:small;height:50px">Score:</i></Col></Row>
+            <Row><Col><i style="font-size:small">Score:</i></Col></Row>
+            <Divider />
         </Col>
-        <Col span="4">
-            <Row justify="start" align="top"><Col span="24">
+        <Col span="2">
+            <Row><Col>
             <div class="bounce">
               <transition name="bounce">
-                <span style="font-size:xx-large;height:50px" v-if="totalTimeFlag" :class="{wrong: totalTime<10}" key="on">{{ totalTime }}</span>
-                <span style="font-size:xx-large;height:50px" v-else :class="{wrong: totalTime<10}" >{{ totalTime }}</span>
+                <span style="font-size:x-large" v-if="totalTimeFlag" :class="{wrong: totalTime<10}" key="on">{{ totalTime }}</span>
+                <span style="font-size:x-large" v-else :class="{wrong: totalTime<10}" >{{ totalTime }}</span>
               </transition>
             </div>
             </Col>
             </Row>
             <Divider />
-            <Row justify="start" align="bottom"><Col span="24" style="height:50px">
-            <i style="font-size:xx-large">{{ score }}</i>
+            <Row><Col>
+            <i style="font-size:x-large">{{ score }}</i>
             </Col>
             </Row>
+            <Divider />
         </Col>
         <Col span="2">
-            <Row justify="start" align="top"><Col span="24"><i style="font-size:small;height:50px">Total Win:</i></Col></Row>
+            <Row><Col><i style="font-size:small">Total Win:</i></Col></Row>
             <Divider />
-            <Row justify="start" align="bottom"><Col span="24"><i style="font-size:small;height:50px">Life:</i></Col></Row>
+            <Row><Col><i style="font-size:small">Life:</i></Col></Row>
+            <Divider />
         </Col>
-        <Col span="4">
-            <Row justify="start" align="top"><Col span="24"><Badge :count="win"><span style="font-size:xx-large">{{ totalWin }}</span></Badge></Col></Row>
+        <Col span="2">
+            <Row><Col><Badge :count="win"><span style="font-size:x-large">{{ totalWin }}</span></Badge></Col></Row>
             <Divider />
-            <Row justify="start" align="bottom"><Col span="24" style="height:50px">
-                <div class="in-out-translate-demo-wrapper" style="font-size:xx-large">
+            <Row><Col>
+                <div class="in-out-translate-demo-wrapper" style="font-size:x-large">
                   <transition name="in-out-translate-fade" mode="in-out">
                     <span v-if="lifeFlag" key="on">{{ life }}</span>
                     <span v-else key="off">{{ life }}</span>
                   </transition>
                 </div>
             </Col></Row>
+            <Divider />
         </Col>
         <Col span="4"><span :class="icon"></span></Col >
     </Row>
@@ -48,15 +52,15 @@
       <Col span="2">
         <i style="font-size:small">Level:</i>
       </Col>
-      <Col span="4">
+      <Col span="2">
         <div class="in-out-translate-demo-wrapper">
           <transition name="in-out-translate-fade" mode="in-out">
-            <span style="font-size:xx-large" v-if="levelFlag" key="on">{{ level }}</span>
-            <span style="font-size:xx-large" v-else key="off">{{ level }}</span>
+            <span style="font-size:x-large" v-if="levelFlag" key="on">{{ level }}</span>
+            <span style="font-size:x-large" v-else key="off">{{ level }}</span>
           </transition>
         </div>
       </Col>
-      <Col span="10"><Rate v-model="level" disabled :count="10" allow-half /></Col>
+      <Col span="8"><Rate v-model="level" disabled :count="10" allow-half /></Col>
     </Row >
 <Divider />
      <Row type="flex" justify="center" align="middle">
@@ -198,10 +202,6 @@ export default {
       });
       this.$Loading.start();
       this.$Loading.update(0);
-      this.$Notice.config({
-        top: 10,
-        duration: 1
-      });
 
       this.timer = setInterval(() => {
         this.totalTime -= 1;
@@ -271,8 +271,8 @@ export default {
       this.win += 1;
       this.totalWin += 1;
       // let bonus = Number.parseInt(this.win / 10);
-      this.score += this.scoreLevel[this.level] / 10 * 1;
-      if (this.score > this.scoreLevel[this.level]) {
+      this.score += this.scoreLevel[Math.min(9, this.level)] / 10 * 1;
+      if (this.score > this.scoreLevel[Math.min(9, this.level)]) {
         this.level += 1;
         this.levelFlag = !this.levelFlag;
         this.info("level up!", "New level is " + (this.level + 1));
@@ -324,6 +324,7 @@ export default {
       }
     },
     onkeydown: function(event) {
+      console.log("keyup-down  ::" + event.keyCode);
       if (event.keyCode === 16) {
         this.shiftKey = true;
         return;

@@ -1,10 +1,10 @@
 <template>
-  <div id="expression" @click="act()">
+  <div id="expression" @click="act()" @keydown="onkeydown" @keyup="onkeyup" @keypress="onkeypress">
     <Row type="flex" justify="center" align="middle">
       <Col span="24">
-    <Card :padding="2">
+    <Card :padding="2" :class="{activecard: active}">
     <p slot="title">No.{{ id+1 }}</p><p slot="extra">level:{{ level }}</p>
-    <table :class="{activate: active, loading:loading}">
+    <table :class="{activate: active}">
       <tr>
         <td v-for="e in exp" class="e">
           <i v-if="e!=='Q'" >{{ e }}</i>
@@ -12,7 +12,7 @@
             <i v-if="answered && e=='Q'" class="wrong" key="on">{{ inputAnswer }}</i>
           </transition>
 
-          <i v-if="!answered && e=='Q'"><input :ref="getInputId" v-model="inputAnswer" /></i>
+          <i v-if="!answered && e=='Q'"><div class="input">{{inputAnswer}}</div></i>
         </td>
       </tr>
     </table>
@@ -38,15 +38,9 @@ export default {
       inputAnswer: "",
       answer: "",
       answered: false,
-      loading: false,
       level: 0,
       active: false
     };
-  },
-  updated() {
-    // this.loading = false;
-    if (typeof this.$refs[this.getInputId][0] != "undefined" && this.active)
-      this.$refs[this.getInputId][0].focus();
   },
   computed: {
     exp() {
@@ -54,11 +48,18 @@ export default {
       let signs = seed.level_equal_sign[Math.min(9, this.level)];
 
       let ret = this.shakeNumber(ops);
-      let result = eval(ret.join(""));
 
-      while (result < 0) {
+      let result = eval(ret.join(""));
+      let twoZero = ret.filter(function(item, index, array) {
+        return item === 0;
+      }).length;
+
+      while (result < 0 || parseInt(result) < result || twoZero > 1) {
         ret = this.shakeNumber(ops);
         result = eval(ret.join(""));
+        twoZero = ret.filter(function(item, index, array) {
+          return item === 0;
+        }).length;
       }
       let sign =
         signs.length === 1
@@ -106,7 +107,6 @@ export default {
     },
     setLevel(level) {
       this.level = level;
-      this.loading = false;
       this.answered = false;
       this.inputAnswer = "";
       this.answer = "";
@@ -114,7 +114,6 @@ export default {
     submitAnswer() {
       this.answered = true;
       if (this.answer == this.inputAnswer) {
-        this.loading = true;
         this.goodAnswer(this);
       } else {
         this.badAnswer(this);
@@ -187,7 +186,54 @@ export default {
       }
       // let result = eval(ret.join(''));
       // return result;
+      console.log("shakeNumber:" + ret);
       return ret;
+    },
+    onkeyup: function(event) {
+      console.log("keyup-keycode  ::" + event.keyCode);
+      if (event.keyCode === 16) {
+        this.shiftKey = false;
+        return;
+      }
+      if (this.shiftKey && event.keyCode === 186) {
+        this.shiftKey = false;
+        this.onInputNumber("*");
+        return;
+      }
+      if (this.shiftKey && event.keyCode === 187) {
+        this.shiftKey = false;
+        this.onInputNumber("+");
+        return;
+      }
+      if (this.shiftKey && event.keyCode === 188) {
+        this.shiftKey = false;
+        this.onInputNumber("<");
+        return;
+      }
+      if (this.shiftKey && event.keyCode === 189) {
+        this.shiftKey = false;
+        this.onInputNumber("=");
+        return;
+      }
+      if (this.shiftKey && event.keyCode === 190) {
+        this.shiftKey = false;
+        this.onInputNumber(">");
+        return;
+      }
+    },
+    onkeydown: function(event) {
+      console.log("keyup-down  ::" + event.keyCode);
+      if (event.keyCode === 16) {
+        this.shiftKey = true;
+        return;
+      }
+    },
+    onkeypress: function(event) {
+      console.log("keyup-press  ::" + event.keyCode);
+      if (event.keyCode === 61 || event.keyCode === 13) {
+        this.onInputNumber("=");
+        return;
+      }
     }
   }
 };
@@ -201,11 +247,12 @@ table {
   border: 0px solid #aaa;
 }
 
-.activate {
-  border: 2px solid blue;
+.activecard {
+  background: #f7f7fc;
+  border-color: #91d5ff;
 }
-.loading {
-  background-color: greenyellow;
+.activate {
+  border: 4px solid #91d5ff;
 }
 tr {
   width: 450px;
@@ -220,22 +267,17 @@ td {
 td.e {
   border: 0px;
 }
-input {
+.input {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
+  background: #ffffff;
+  border: 1px solid #aaa;
   font-size: xx-large;
-  width: 70px;
+  width: 90px;
+  height: 50px;
 }
 .wrong {
   color: red;
-}
-
-#number-entry {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin: auto;
-  width: 100%;
 }
 </style>

@@ -2,35 +2,34 @@
   <div id="number-entry" >
   <Row type="flex" justify="center" align="middle">
   <Col span="4">
-      <Poptip width="30" trigger="focus" content="Backspace"><Button type="error" style="width:75px; height:40px" size="large" @click.prevent="onclick('BS')">&lt;-BS</Button></Poptip>
-      </Poptip>
+      <Button type="error" style="width:75px; height:40px" size="large" @click.prevent="onclick('BS')"><span style="font-size:x-large">&lt;-BS</span></Button>
   </Col>
   <Col span="4">
-      <Poptip width="30" trigger="focus" content="/"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('/')">/</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('/')"><span style="font-size:x-large">/</span></Button>
   </Col>
   <Col span="4">
-      <Poptip width="30" trigger="focus" content="*"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('*')">*</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('*')"><span style="font-size:x-large">*</span></Button>
   </Col>
   <Col span="4">
-      <Poptip width="30" trigger="focus" content="-"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('-')">-</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('-')"><span style="font-size:x-large">-</span></Button>
   </Col>
   </Row>
   
   <Row type="flex" justify="center" align="middle">
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="7"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('7')">7</Button></Poptip>
-      <Poptip width="30" trigger="focus" content="4"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('4')">4</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('7')"><span style="font-size:x-large">7</span></Button>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('4')"><span style="font-size:x-large">4</span></Button>
   </Col>
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="8"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('8')">8</Button></Poptip>
-      <Poptip width="30" trigger="focus" content="5"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('5')">5</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('8')"><span style="font-size:x-large">8</span></Button>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('5')"><span style="font-size:x-large">5</span></Button>
   </Col>
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="9"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('9')">9</Button></Poptip>
-      <Poptip width="30" trigger="focus" content="6"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('6')">6</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('9')"><span style="font-size:x-large">9</span></Button>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('6')"><span style="font-size:x-large">6</span></Button>
   </Col>
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="+"><Button type="default" style="width:75px; height:80px" size="large" @click.prevent="onclick('+')">+</Button></Poptip>
+      <Button type="default" style="width:75px; height:80px" size="large" @click.prevent="onclick('+')"><span style="font-size:x-large">+</span></Button>
   </Col>
   </Row>
   
@@ -40,33 +39,33 @@
   <Col span="8" style="width:150px">
       <Row type="flex" justify="center" align="middle">
       <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="1"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('1')">1</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('1')"><span style="font-size:x-large">1</span></Button>
       </Col>
       <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="2"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('2')">2</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('2')"><span style="font-size:x-large">2</span></Button>
       </Col>
       </Row>
       <Row type="flex" justify="center" align="middle">
       <Col span="8" style="width:150px">
-      <Poptip width="30" trigger="focus" content="0"><Button type="default" style="width:150px; height:40px" size="large" @click.prevent="onclick('0')" >0</Button></Poptip>
+      <Button type="default" style="width:150px; height:40px" size="large" @click.prevent="onclick('0')" ><span style="font-size:x-large">0</span></Button>
       </Col>
       </Row>
   </Col>
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="3"><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('3')">3</Button></Poptip>
-      <Poptip width="30" trigger="focus" content="."><Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('.')">.</Button></Poptip>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('3')"><span style="font-size:x-large">3</span></Button>
+      <Button type="default" style="width:75px; height:40px" size="large" @click.prevent="onclick('.')"><span style="font-size:x-large">.</span></Button>
   </Col>
   <Col span="4" style="width:75px">
-      <Poptip width="30" trigger="focus" content="="><Button type="success" style="width:75px; height:80px" size="large" @click.prevent="onclick('=')">=</Button></Poptip>
+      <Button type="success" style="width:75px; height:80px" size="large" @click.prevent="onclick('=')"><span style="font-size:x-large">=</span></Button>
   </Col>
   </Row>
 
   <Row type="flex" justify="center" align="middle">
   <Col span="8" style="width:150px">
-      <Poptip width="30" trigger="focus" content="<"><Button type="info" shape="circle" style="width:150px; height:40px" size="large" @click.prevent="onclick('<')" >&lt;</Button></Poptip>
+      <Button type="info" shape="circle" style="width:150px; height:40px" size="large" @click.prevent="onclick('<')" ><span style="font-size:x-large">&lt;</span></Button>
   </Col>
   <Col span="8" style="width:150px">
-      <Poptip width="30" trigger="focus" content=">"><Button type="info" shape="circle" style="width:150px; height:40px" size="large" @click.prevent="onclick('>')" >&gt;</Button></Poptip>
+      <Button type="info" shape="circle" style="width:150px; height:40px" size="large" @click.prevent="onclick('>')" ><span style="font-size:x-large">&gt;</span></Button>
   </Col>
   </Row>
   </div>
