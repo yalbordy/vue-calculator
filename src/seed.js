@@ -4,12 +4,11 @@ let seed = {
     TOTAL_LIFE: 5,
 
     iconSize: [
-        // 'fa-5x',
-        // 'fa-4x',
+        'fa-5x',
+        'fa-4x',
         // 'fa-3x',
         // 'fa-2x',
         // 'fa-lg',
-        '',
     ],
 
     level_digit: [

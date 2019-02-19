@@ -1,7 +1,10 @@
 <template>
-  <div id="expression" click="act()">
-    No.{{ id+1 }}  level:{{ level }}
-    <table class="{activate: active, loading:loading}">
+  <div id="expression" @click="act()">
+    <Row type="flex" justify="center" align="middle">
+      <Col span="24">
+    <Card :padding="2">
+    <p slot="title">No.{{ id+1 }}</p><p slot="extra">level:{{ level }}</p>
+    <table :class="{activate: active, loading:loading}">
       <tr>
         <td v-for="e in exp" class="e">
           <i v-if="e!=='Q'" >{{ e }}</i>
@@ -9,10 +12,13 @@
             <i v-if="answered && e=='Q'" class="wrong" key="on">{{ inputAnswer }}</i>
           </transition>
 
-          <i v-if="!answered && e=='Q'"><input ref="getInputId" v-model="inputAnswer" /></i>
+          <i v-if="!answered && e=='Q'"><input :ref="getInputId" v-model="inputAnswer" /></i>
         </td>
       </tr>
     </table>
+    </Card>
+    </Col>
+    </Row>
   </div >
 </template >
 
@@ -186,3 +192,50 @@ export default {
   }
 };
 </script>
+
+<style>
+table {
+  align-content: center;
+  margin-top: 10px;
+  width: 450px;
+  border: 0px solid #aaa;
+}
+
+.activate {
+  border: 2px solid blue;
+}
+.loading {
+  background-color: greenyellow;
+}
+tr {
+  width: 450px;
+}
+td {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #aaa;
+  text-align: center;
+  font-size: xx-large;
+}
+td.e {
+  border: 0px;
+}
+input {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-size: xx-large;
+  width: 70px;
+}
+.wrong {
+  color: red;
+}
+
+#number-entry {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin: auto;
+  width: 100%;
+}
+</style>

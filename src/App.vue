@@ -1,28 +1,54 @@
 <template>
-  <div id="app" >
-
-
+  <div id="app" @keypress.exact="onkeypress">
     <Divider />
-    <Rate v-model="level" disabled :count="10" allow-half />
+
     <Row type="flex" justify="center" align="middle">
-      <Col span="10" style="height:50"></Col>
+        <Col span="2">
+            <Row justify="start" align="top"><Col span="24"><i style="font-size:small;height:50px">Time:</i></Col></Row>
+            <Divider />
+            <Row justify="start" align="bottom"><Col span="24"><i style="font-size:small;height:50px">Score:</i></Col></Row>
+        </Col>
+        <Col span="4">
+            <Row justify="start" align="top"><Col span="24">
+            <div class="bounce">
+              <transition name="bounce">
+                <span style="font-size:xx-large;height:50px" v-if="totalTimeFlag" :class="{wrong: totalTime<10}" key="on">{{ totalTime }}</span>
+                <span style="font-size:xx-large;height:50px" v-else :class="{wrong: totalTime<10}" >{{ totalTime }}</span>
+              </transition>
+            </div>
+            </Col>
+            </Row>
+            <Divider />
+            <Row justify="start" align="bottom"><Col span="24" style="height:50px">
+            <i style="font-size:xx-large">{{ score }}</i>
+            </Col>
+            </Row>
+        </Col>
+        <Col span="2">
+            <Row justify="start" align="top"><Col span="24"><i style="font-size:small;height:50px">Total Win:</i></Col></Row>
+            <Divider />
+            <Row justify="start" align="bottom"><Col span="24"><i style="font-size:small;height:50px">Life:</i></Col></Row>
+        </Col>
+        <Col span="4">
+            <Row justify="start" align="top"><Col span="24"><Badge :count="win"><span style="font-size:xx-large">{{ totalWin }}</span></Badge></Col></Row>
+            <Divider />
+            <Row justify="start" align="bottom"><Col span="24" style="height:50px">
+                <div class="in-out-translate-demo-wrapper" style="font-size:xx-large">
+                  <transition name="in-out-translate-fade" mode="in-out">
+                    <span v-if="lifeFlag" key="on">{{ life }}</span>
+                    <span v-else key="off">{{ life }}</span>
+                  </transition>
+                </div>
+            </Col></Row>
+        </Col>
+        <Col span="4"><span :class="icon"></span></Col >
     </Row>
+
     <Row type="flex" justify="center" align="middle">
-      <Col span="1">
-        <i style="font-size:small">Time:</i>
-      </Col>
-      <Col span="1">
-        <div class="bounce">
-          <transition name="bounce">
-            <span style="font-size:xx-large" v-if="totalTimeFlag" class="{wrong: totalTime<10}" key="on">{{ totalTime }}</span>
-            <span style="font-size:xx-large" v-else class="{wrong: totalTime<10}" >{{ totalTime }}</span>
-          </transition>
-        </div>
-      </Col>
-      <Col span="1">
+      <Col span="2">
         <i style="font-size:small">Level:</i>
       </Col>
-      <Col span="1">
+      <Col span="4">
         <div class="in-out-translate-demo-wrapper">
           <transition name="in-out-translate-fade" mode="in-out">
             <span style="font-size:xx-large" v-if="levelFlag" key="on">{{ level }}</span>
@@ -30,37 +56,26 @@
           </transition>
         </div>
       </Col>
-      <Col span="2"><span style="font-size:xx-large" class="icon"></span></Col >
-
-      <Col span="1"><i style="font-size:small">Total Win:</i></Col>
-      <Col span="1"><Badge :count="win"><span style="font-size:xx-large">{{ totalWin }}</span></Badge></Col >
+      <Col span="10"><Rate v-model="level" disabled :count="10" allow-half /></Col>
     </Row >
-    <Row type="flex" justify="center" align="middle">
-      <Col span="2" >
-        <div class="in-out-translate-demo-wrapper">
-          <i style="font-size:small">Life:</i>
-          <transition name="in-out-translate-fade" mode="in-out">
-            <span v-if="lifeFlag" key="on">{{ life }}</span>
-            <span v-else key="off">{{ life }}</span>
-          </transition>
-        </div>
-      </Col>
-      <Col span="4"><i style="font-size:small">Score:</i>{{ score }}</Col>
-      <Col span="2"><i style="font-size:small">Win:</i>{{ win }}</Col>
-    </Row>
-
-    <Row type="flex" justify="center" align="middle">
+<Divider />
+     <Row type="flex" justify="center" align="middle">
+       
       <div v-if="gameOver">
-        <h1 style="color:red">Game Over!</h1>
-        <Button type="primary" @click="newGame">Start</Button>
+        <h1 style="color:red" v-show="gameStatusChanged">Game Over!</h1>
+        <Button type="primary" size="large" @click="newGame">Start</Button>
       </div>
       <div v-else>
         <div v-for="expId in expressionsIdx">
-          <expression :id='expId' :ref='expId' />
+          <expression :id='expId' :ref='expId' @activate="activate" />
         </div>
+
+        <Affix :offset-bottom="20">
         <Divider />
-        <NumberEntry inputNumber="onInputNumber" />
+        <NumberEntry @inputNumber="onInputNumber" />
+        </Affix>
       </div>
+      
     </Row >
   </div >
 </template >
@@ -123,7 +138,7 @@ export default {
       return ret;
     },
     icon() {
-      let size = parseInt(this.totalTime % 6);
+      let size = parseInt(this.totalTime % seed.iconSize.length);
       return this.iconSet[this.level] + " " + seed.iconSize[size];
     }
   },
@@ -141,8 +156,7 @@ export default {
     info(title, desc) {
       this.$Notice.info({
         title: title,
-        desc: desc,
-        duration: 3
+        desc: desc
       });
     },
     success(title, desc) {
@@ -201,13 +215,28 @@ export default {
     checkGame() {
       if (this.totalTime <= 0 || this.life <= 0) {
         this.gameOver = true;
+        this.$Notice.info({
+          title: "Gmae Over",
+          render: h => {
+            return h("h1", [
+              "Score: ",
+              this.score,
+              h("br"),
+              "Level:",
+              this.level
+            ]);
+          },
+          duration: 0
+        });
         clearInterval(this.timer);
       }
       if (this.totalTime % 60 === 0) {
-        this.warning("Last " + this.totalTime / 60 + " minutes", "");
+        let m = this.totalTime / 60;
+        if (m > 1) this.warning("Last " + m + " minutes", "");
+        else if (m == 1) this.warning("Last 1 minute", "");
       }
       if (this.totalTime == 10) {
-        this.warning("Last 10 seconds", "");
+        this.warning("10 seconds", "");
       }
     },
     activate(idx) {
@@ -215,16 +244,16 @@ export default {
       console.log("activate: " + idx);
       for (let i in this.expressionsIdx) {
         if (i != this.activeIdx) {
-          this.$refs.expId[i].$data.active = false;
+          this.$refs[i][0].$data.active = false;
         } else {
-          this.$refs.expId[i].$data.active = true;
+          this.$refs[i][0].$data.active = true;
           // this.onInputNumber(''); //set focus
         }
       }
     },
     onInputNumber(key) {
       // console.log("App catch:" + key + " active:" + this.activeIdx);
-      this.$refs.expId[this.activeIdx].setInputAnswer(key);
+      this.$refs[this.activeIdx][0].setInputAnswer(key);
     },
     getExpression(vmExp) {
       let exp = "";
