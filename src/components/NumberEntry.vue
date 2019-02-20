@@ -85,7 +85,6 @@ export default {
   name: "NumberEntry",
   methods: {
     onclick(key) {
-      console.log(key);
       this.$emit("inputNumber", key);
     }
   }

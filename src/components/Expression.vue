@@ -1,5 +1,5 @@
 <template>
-  <div id="expression" @click="act()" @keydown="onkeydown" @keyup="onkeyup" @keypress="onkeypress">
+  <div id="expression" @click="act()">
     <Row type="flex" justify="center" align="middle">
       <Col span="24">
     <Card :padding="2" :class="{activecard: active}">
@@ -70,7 +70,7 @@ export default {
           : signs[parseInt((Math.random() * 100) % signs.length)];
       ret[ret.length] = sign;
 
-      let r = parseInt(Math.random() * 10);
+      let r = parseInt(Math.random() * 5);
       if (r === 0) r = 1;
       if (sign === ">") {
         if (result - r < 0) result -= 1;
@@ -85,9 +85,10 @@ export default {
       if (sign === ">" || sign === "<") {
         r = ret.length - 2;
       }
+      console.log("r::" + r);
       while (
         (r === ret.length - 2 && signs.length === 1) ||
-        (r < ret.length - 1 && r % 2 === 1 && ops.length === 1)
+        (r < ret.length - 2 && r % 2 === 1 && ops.length === 1)
       ) {
         r = parseInt((Math.random() * 1000) % ret.length);
       }
@@ -193,52 +194,6 @@ export default {
       // return result;
       console.log("shakeNumber:" + ret);
       return ret;
-    },
-    onkeyup: function(event) {
-      console.log("keyup-keycode  ::" + event.keyCode);
-      if (event.keyCode === 16) {
-        this.shiftKey = false;
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 186) {
-        this.shiftKey = false;
-        this.onInputNumber("*");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 187) {
-        this.shiftKey = false;
-        this.onInputNumber("+");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 188) {
-        this.shiftKey = false;
-        this.onInputNumber("<");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 189) {
-        this.shiftKey = false;
-        this.onInputNumber("=");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 190) {
-        this.shiftKey = false;
-        this.onInputNumber(">");
-        return;
-      }
-    },
-    onkeydown: function(event) {
-      console.log("keyup-down  ::" + event.keyCode);
-      if (event.keyCode === 16) {
-        this.shiftKey = true;
-        return;
-      }
-    },
-    onkeypress: function(event) {
-      console.log("keyup-press  ::" + event.keyCode);
-      if (event.keyCode === 61 || event.keyCode === 13) {
-        this.onInputNumber("=");
-        return;
-      }
     }
   }
 };

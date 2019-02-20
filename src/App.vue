@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @keypress.exact="onkeypress" @keydown.native="onkeydown" @keyup.native="onkeyup">
+  <div id="app">
     <Divider />
 
     <Row type="flex" justify="center" align="middle">
@@ -289,51 +289,6 @@ export default {
         idx = 0;
       }
       this.activate(idx);
-    },
-    onkeyup: function(event) {
-      console.log("keyup-keycode  ::" + event.keyCode);
-      if (event.keyCode === 16) {
-        this.shiftKey = false;
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 186) {
-        this.shiftKey = false;
-        this.onInputNumber("*");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 187) {
-        this.shiftKey = false;
-        this.onInputNumber("+");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 188) {
-        this.shiftKey = false;
-        this.onInputNumber("<");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 189) {
-        this.shiftKey = false;
-        this.onInputNumber("=");
-        return;
-      }
-      if (this.shiftKey && event.keyCode === 190) {
-        this.shiftKey = false;
-        this.onInputNumber(">");
-        return;
-      }
-    },
-    onkeydown: function(event) {
-      console.log("keyup-down  ::" + event.keyCode);
-      if (event.keyCode === 16) {
-        this.shiftKey = true;
-        return;
-      }
-    },
-    onkeypress: function(event) {
-      if (event.keyCode === 61 || event.keyCode === 13) {
-        this.onInputNumber("=");
-        return;
-      }
     }
   }
 };
