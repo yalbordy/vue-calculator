@@ -60,7 +60,8 @@
           </transition>
         </div>
       </Col>
-      <Col span="8"><Rate v-model="level" disabled :count="10" allow-half /></Col>
+      <Col span="7"><Rate v-model="level" disabled :count="10" allow-half /></Col>
+      <Col span="1"><Slider v-model="difficult" :max="2" show-stops></Slider></Col>
     </Row >
 <Divider />
      <Row type="flex" justify="center" align="middle">
@@ -111,6 +112,7 @@ export default {
       score: 0,
       win: 0,
       totalWin: 0,
+      difficult: 0,
       shiftKey: false,
       activeIdx: 0,
       scoreLevel: [
@@ -274,7 +276,7 @@ export default {
         this.levelFlag = !this.levelFlag;
         this.info("level up!", "New level is " + (this.level + 1));
       }
-      vmExp.setLevel(this.level);
+      vmExp.setLevel(this.level, this.difficult);
     },
     badAnswer: function(vmExp) {
       this.error(this.getExpression(vmExp), "");

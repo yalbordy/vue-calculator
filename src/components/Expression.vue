@@ -39,13 +39,16 @@ export default {
       answer: "",
       answered: false,
       level: 0,
+      difficult: 0,
       active: false
     };
   },
   computed: {
     exp() {
-      let ops = seed.level_operators[Math.min(9, this.level)];
-      let signs = seed.level_equal_sign[Math.min(9, this.level)];
+      let level_def =
+        seed.level_define[this.difficult][Math.min(9, this.level)];
+      let ops = level_def.ops;
+      let signs = level_def.sign;
 
       let ret = this.shakeNumber(ops);
 
@@ -105,8 +108,9 @@ export default {
       this.active = true;
       this.$emit("activate", this.id);
     },
-    setLevel(level) {
+    setLevel(level, difficult) {
       this.level = level;
+      this.difficult = difficult;
       this.answered = false;
       this.inputAnswer = "";
       this.answer = "";
@@ -137,7 +141,8 @@ export default {
       }
     },
     shakeNumber(ops) {
-      let digit = seed.level_digit[Math.min(9, this.level)];
+      let digit =
+        seed.level_define[this.difficult][Math.min(9, this.level)].digit;
       let opCnt = parseInt((Math.random() * 100) % 3);
       if (opCnt === 0) opCnt = 1;
 
