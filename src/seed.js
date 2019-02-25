@@ -11,8 +11,36 @@ let seed = {
         // 'fa-lg',
     ],
 
+    difficult_zero_icons: [
+        ['ios-brush', 'ios-brush-outline'],
+        ['ios-bug', 'ios-bug-outline'],
+        ['ios-plane', 'ios-plane-outline'],
+        ['ios-leaf', 'ios-leaf-outline'],
+        ['ios-man', 'ios-man-outline'],
+        ['ios-nutrition', 'ios-nutrition-outline'],
+        ['ios-paper-plane', 'ios-paper-plane-outline'],
+        ['ios-umbrella', 'ios-umbrella-outline'],
+        ['ios-basket', 'ios-basket-outline'],
+        ['ios-ice-cream', 'ios-ice-cream-outline'],
+        ['ios-heart', 'ios-heart-outline'],
+        ['ios-home', 'ios-home-outline'],
+        ['ios-pizza', 'ios-pizza-outline'],
+        ['ios-tennisball', 'ios-tennisball-outline'],
+    ],
     level_define: {
         0: {
+            0: { sign: ['='], ops: ['+'], digit: 1 },
+            1: { sign: ['='], ops: ['+'], digit: 1 },
+            2: { sign: ['='], ops: ['-'], digit: 1 },
+            3: { sign: ['='], ops: ['-'], digit: 1 },
+            4: { sign: ['='], ops: ['+', '-'], digit: 1 },
+            5: { sign: ['='], ops: ['+', '-'], digit: 1 },
+            6: { sign: ['='], ops: ['+', '-'], digit: 1 },
+            7: { sign: ['=', '>', '<'], ops: ['+', '-'], digit: 1 },
+            8: { sign: ['=', '>', '<'], ops: ['+', '-'], digit: 1 },
+            9: { sign: ['=', '>', '<'], ops: ['+', '-'], digit: 1 },
+        },
+        1: {
             0: { sign: ['='], ops: ['+'], digit: 1 },
             1: { sign: ['='], ops: ['-'], digit: 1 },
             2: { sign: ['='], ops: ['+', '-'], digit: 1 },
@@ -24,7 +52,7 @@ let seed = {
             8: { sign: ['=', '>', '<'], ops: ['+', '-'], digit: 2 },
             9: { sign: ['=', '>', '<'], ops: ['+', '-'], digit: 3 },
         },
-        1: {
+        2: {
             0: { sign: ['='], ops: ['+'], digit: 1 },
             1: { sign: ['=', '>', '<'], ops: ['+'], digit: 1 },
             2: { sign: ['='], ops: ['-'], digit: 1 },
@@ -32,11 +60,11 @@ let seed = {
             4: { sign: ['='], ops: ['+', '-'], digit: 2 },
             5: { sign: ['='], ops: ['*'], digit: 1 },
             6: { sign: ['='], ops: ['/'], digit: 1 },
-            7: { sign: ['=', '>', '<'], ops: ['+', '-', '*'], digit: 1 },
-            8: { sign: ['=', '>', '<'], ops: ['+', '-', '*'], digit: 2 },
-            9: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 2 },
+            7: { sign: ['=', '>', '<'], ops: ['+', '-', '*'], digit: 2 },
+            8: { sign: ['=', '>', '<'], ops: ['+', '-', '*'], digit: 3 },
+            9: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 3 },
         },
-        2: {
+        3: {
             0: { sign: ['='], ops: ['+'], digit: 2 },
             1: { sign: ['='], ops: ['-'], digit: 2 },
             2: { sign: ['='], ops: ['+', '-'], digit: 2 },
@@ -45,8 +73,8 @@ let seed = {
             5: { sign: ['='], ops: ['*'], digit: 2 },
             6: { sign: ['='], ops: ['/'], digit: 2 },
             7: { sign: ['=', '>', '<'], ops: ['+', '-', '*'], digit: 2 },
-            8: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 2 },
-            9: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 2 },
+            8: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 3 },
+            9: { sign: ['=', '>', '<'], ops: ['+', '-', '*', '/'], digit: 3 },
         }
     },
 

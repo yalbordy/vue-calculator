@@ -32,7 +32,7 @@
             <Row><Col><i style="font-size:small">Life:</i></Col></Row>
             <Divider />
         </Col>
-        <Col span="2">
+        <Col span="4">
             <Row><Col><Badge :count="win"><span style="font-size:x-large">{{ totalWin }}</span></Badge></Col></Row>
             <Divider />
             <Row><Col>
@@ -60,8 +60,8 @@
           </transition>
         </div>
       </Col>
-      <Col span="7"><Rate v-model="level" disabled :count="10" allow-half /></Col>
-      <Col span="1"><Slider v-model="difficult" :max="2" show-stops></Slider></Col>
+      <Col span="9"><Rate v-model="level" disabled :count="10" allow-half /></Col>
+      <Col span="1"><Slider v-model="difficult" :max="3" show-stops :disabled="!gameOver"></Slider></Col>
     </Row >
 <Divider />
      <Row type="flex" justify="center" align="middle">
@@ -72,7 +72,7 @@
       </div>
       <div v-else>
         <div v-for="expId in expressionsIdx">
-          <expression :id='expId' :ref='expId' @activate="activate" />
+          <expression :id='expId' :difficult='difficult' :ref='expId' @activate="activate"  />
         </div>
         <Divider />
         <NumberEntry @inputNumber="onInputNumber" />
@@ -80,7 +80,7 @@
       
     </Row >
   </div >
-</template >
+</template>
 
   <script>
 import seed from "./seed";
@@ -112,7 +112,7 @@ export default {
       score: 0,
       win: 0,
       totalWin: 0,
-      difficult: 0,
+      difficult: 1,
       shiftKey: false,
       activeIdx: 0,
       scoreLevel: [
@@ -276,7 +276,7 @@ export default {
         this.levelFlag = !this.levelFlag;
         this.info("level up!", "New level is " + (this.level + 1));
       }
-      vmExp.setLevel(this.level, this.difficult);
+      vmExp.setLevel(this.level);
     },
     badAnswer: function(vmExp) {
       this.error(this.getExpression(vmExp), "");

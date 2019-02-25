@@ -6,7 +6,7 @@
     <p slot="title">No.{{ id+1 }}</p><p slot="extra">level:{{ level }}</p>
     <table :class="{activate: active}">
       <tr>
-        <td v-for="e in exp" class="e">
+        <td v-for="(e, idx) in exp" class="e">
           <i v-if="e!=='Q'" >{{ e }}</i>
           <transition name="bounce-wrong">
             <i v-if="answered && e=='Q'" class="wrong" key="on">{{ inputAnswer }}</i>
@@ -15,12 +15,19 @@
           <i v-if="!answered && e=='Q'"><div class="input">{{inputAnswer}}</div></i>
         </td>
       </tr>
+      <tr v-if="difficult==0 && !answered && active">
+        <td v-for="(e,idx) in exp" class="e">
+            <i v-for="i in hintIcon(idx)">
+            <Icon :type="i" />
+            </i>
+        </td>
+      </tr>
     </table>
     </Card>
     </Col>
     </Row>
-  </div >
-</template >
+  </div>
+</template>
 
   <script>
 import seed from "../seed";
@@ -32,15 +39,15 @@ export default {
       setLevel: this.setLevel
     };
   },
-  props: { id: Number },
+  props: { id: Number, difficult: Number },
   data() {
     return {
       inputAnswer: "",
       answer: "",
       answered: false,
       level: 0,
-      difficult: 0,
-      active: false
+      active: false,
+      hintIconSeq: -1
     };
   },
   computed: {
@@ -57,7 +64,15 @@ export default {
         return item === 0;
       }).length;
 
-      while (result < 0 || parseInt(result) < result || twoZero > 1) {
+      while (
+        result < 0 ||
+        parseInt(result) < result ||
+        twoZero > 1 ||
+        (this.difficult == 0 && this.level == 0 && result > 3) ||
+        (this.difficult == 0 && this.level == 1 && result > 4) ||
+        (this.difficult == 0 && this.level == 2 && result > 5) ||
+        (this.difficult == 0 && this.level < 6 && result > 10)
+      ) {
         ret = this.shakeNumber(ops);
         result = eval(ret.join(""));
         twoZero = ret.filter(function(item, index, array) {
@@ -85,7 +100,6 @@ export default {
       if (sign === ">" || sign === "<") {
         r = ret.length - 2;
       }
-      console.log("r::" + r);
       while (
         (r === ret.length - 2 && signs.length === 1) ||
         (r < ret.length - 2 && r % 2 === 1 && ops.length === 1)
@@ -109,12 +123,12 @@ export default {
       this.active = true;
       this.$emit("activate", this.id);
     },
-    setLevel(level, difficult) {
+    setLevel(level) {
       this.level = level;
-      this.difficult = difficult;
       this.answered = false;
       this.inputAnswer = "";
       this.answer = "";
+      this.hintIconSeq = -1;
     },
     submitAnswer() {
       this.answered = true;
@@ -145,11 +159,14 @@ export default {
       let digit =
         seed.level_define[this.difficult][Math.min(9, this.level)].digit;
       let opCnt = parseInt((Math.random() * 100) % 3);
-      if (opCnt === 0) opCnt = 1;
+      if (opCnt === 0 || this.difficult === 0) opCnt = 1;
 
       let num1 = parseInt((Math.random() * 10000) % Math.pow(10, digit));
       if (num1 === 0)
         num1 = parseInt((Math.random() * 10000) % Math.pow(10, digit));
+      while (this.difficult == 0 && num1 > 10) {
+        num1 = num1 / 10;
+      }
 
       let ret = [];
       ret[0] = num1;
@@ -163,6 +180,9 @@ export default {
         let num2 = parseInt((Math.random() * 10000) % Math.pow(10, digit));
         if (num2 === 0)
           num2 = parseInt((Math.random() * 10000) % Math.pow(10, digit));
+        while (this.difficult == 0 && num2 > 10) {
+          num2 = num2 / 10;
+        }
         if (op === "*" && num2 > 10) num2 = parseInt(num2 / 10);
         if (op === "*" && num2 == 0)
           num2 = parseInt((Math.random() * 100) % 8) + 1;
@@ -192,8 +212,67 @@ export default {
       }
       // let result = eval(ret.join(''));
       // return result;
-      console.log("shakeNumber:" + ret);
       return ret;
+    },
+    hintIcon(idx) {
+      if (this.hintIconSeq < 0) {
+        this.hintIconSeq = parseInt(
+          (Math.random() * 10000) % seed.difficult_zero_icons.length
+        );
+      }
+      let e = this.exp.slice(0, this.exp.length);
+      let qIdx = e.findIndex(function(e) {
+        return e === "Q";
+      });
+      e[qIdx] = this.answer;
+
+      let crr = e[idx];
+      if (crr == "Q") crr = this.answer;
+      let ret = [];
+      if (crr >= 0 && e.length == 5) {
+        if (idx == 0) {
+          if (e[1] === "+") {
+            /// is +
+            for (let i = 0; i < e[0]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][0]);
+            }
+          } else {
+            /// is -
+            for (let i = 0; i < e[0] - e[2]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][0]);
+            }
+            for (let i = 0; i < e[2]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][1]);
+            }
+          }
+        } else if (idx == 2) {
+          for (let i = 0; i < e[2]; i++) {
+            ret.push(seed.difficult_zero_icons[this.hintIconSeq][1]);
+          }
+        } else if (idx == 4) {
+          //a+b=c
+          if (e[1] === "+" && e[3] == "=") {
+            /// is +
+            for (let i = 0; i < e[0]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][0]);
+            }
+            for (let i = 0; i < e[2]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][1]);
+            }
+          } else if (e[1] === "-" && e[3] == "=") {
+            /// is -
+            for (let i = 0; i < e[4]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][0]);
+            }
+          } else {
+            /// is < or >
+            for (let i = 0; i < e[4]; i++) {
+              ret.push(seed.difficult_zero_icons[this.hintIconSeq][0]);
+            }
+          }
+        }
+        return ret;
+      }
     }
   }
 };
@@ -203,7 +282,7 @@ export default {
 table {
   align-content: center;
   margin-top: 10px;
-  width: 450px;
+  width: 600px;
   border: 0px solid #aaa;
 }
 
@@ -215,10 +294,10 @@ table {
   border: 4px solid #91d5ff;
 }
 tr {
-  width: 450px;
+  width: 600px;
 }
 td {
-  width: 50px;
+  /* width: 50px; */
   height: 50px;
   border: 1px solid #aaa;
   text-align: center;
